@@ -1,0 +1,64 @@
+services:
+  api:
+    build:
+      context: ./volkanagram-api
+      dockerfile: Dockerfile
+    container_name: volkanagram-api
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./volkanagram-api:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - PORT=${PORT:-5001}
+      - MONGO_URI=${MONGO_URI:-mongodb://mongo:27017/volkanagram}
+      - FRONTEND_ENDPOINT=${FRONTEND_ENDPOINT:-http://localhost:3000}
+      - JWT_SECRET=${JWT_SECRET:-volkanagram-very-secret-key}
+    depends_on:
+      - mongo
+    command: npm run dev
+    networks:
+      - volkanagram-net
+
+  web:
+    build:
+      context: ./volkanagram-web
+      dockerfile: Dockerfile
+    container_name: volkanagram-web
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./volkanagram-web:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - DEBUG=${DEBUG:-next:*}
+      - NEXT_PUBLIC_APP_ENV=${NEXT_PUBLIC_APP_ENV:-development}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:5001/api}
+      - NEXT_PUBLIC_IMAGE_URL=${NEXT_PUBLIC_IMAGE_URL:-http://volkanagram-api:5001/api}
+      - NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL:-http://localhost:5001}
+      - NEXT_PUBLIC_SOCKET_ENDPOINT=${NEXT_PUBLIC_SOCKET_ENDPOINT:-http://localhost:5001}
+    depends_on:
+      - api
+    command: npm run dev
+    networks:
+      - volkanagram-net
+
+  mongo:
+    image: mongo:7
+    container_name: volkanagram-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - volkanagram-net
+
+volumes:
+  mongo_data:
+
+networks:
+  volkanagram-net:
+    driver: bridge
