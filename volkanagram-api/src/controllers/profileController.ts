@@ -52,7 +52,7 @@ export const profile = async (req: Request, res: Response) => {
       ])
 
     const likedPostIds = await PostLike.find({
-      user_id: user._id,
+      user_id: currentUserId,
       post_id: { $in: posts.map(p => p._id) }
     }).distinct('post_id');
 

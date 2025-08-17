@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import {requireAuth} from "../middleware/auth"
+import {optionalAuth, requireAuth} from "../middleware/auth"
 import {uploadMiddleware} from "../middleware/uploader"
 import {get, edit} from "../controllers/userController"
 import {uploader, viewer} from "../controllers/fileController"
@@ -15,7 +15,7 @@ const router = Router();
 router.post('/auth/login', login)
 router.post('/auth/logout', logout)
 router.post('/auth/register', register)
-router.post('/feed', requireAuth, feed)
+router.post('/feed', optionalAuth, feed)
 router.post('/post/byId/:id', requireAuth, byId)
 router.post('/post/comment', requireAuth, comment)
 router.post('/post/create', requireAuth, create)
@@ -29,7 +29,7 @@ router.post('/user/edit', requireAuth, edit)
 
 router.get('/auth/me', requireAuth, me)
 router.get('/health', health)
-router.get('/profile/:username', requireAuth, profile)
+router.get('/profile/:username', optionalAuth, profile)
 router.get('/stories', stories)
 router.get('/:type/:filename', viewer)
 

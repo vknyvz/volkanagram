@@ -25,6 +25,7 @@ jobs:
             cd /home/ec2-user/vkn-mainframe
             docker-compose -f docker-compose.multi.yml --profile volkanagram down
             docker container prune -f
+            docker builder prune -a -f
             docker-compose -f docker-compose.multi.yml --profile volkanagram build --no-cache volkanagram-api volkanagram-web
             docker-compose -f docker-compose.multi.yml --profile volkanagram up -d volkanagram-api volkanagram-web
             

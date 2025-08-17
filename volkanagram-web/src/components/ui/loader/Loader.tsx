@@ -39,7 +39,7 @@ const Loader = ({
               </svg>
 
               <Check
-                size={size * 0.5} // Make check size proportional
+                size={size * 0.5}
                 stroke="url(#checkGradient)"
                 strokeWidth={3}
                 style={{

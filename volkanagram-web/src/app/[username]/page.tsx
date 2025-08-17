@@ -25,6 +25,7 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
   const dispatch = useDispatch()
   const {username} = use(params)
   const [userNotFound, setUserNotFound] = useState<boolean>(false)
+  const [profileLoaded, setProfileLoaded] = useState<boolean>(false)
   const [posts, setPosts] = useState<IPost[]>([])
   const profile = useSelector((state: RootState) => state.profile.data)
   const isLoading = useLoading()
@@ -56,6 +57,7 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
           dispatch(setProfile(res.data.data.profile))
 
           setPosts(res.data.data.posts)
+          setProfileLoaded(true)
         } else {
           setUserNotFound(true)
         }
@@ -75,6 +77,16 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
 
   if (userNotFound) {
     return <NotFound />
+  }
+
+  if (!profileLoaded) {
+    return (
+      <AppLayout showRightSide={false} profilePage>
+        <div className="flex justify-center py-8">
+          <Loader />
+        </div>
+      </AppLayout>
+    )
   }
 
   const amIProfileOwner = () => {

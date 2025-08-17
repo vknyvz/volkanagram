@@ -3,12 +3,11 @@ import Image from "next/image"
 import {getPostImageUrl} from "@/utils/imageHelpers"
 import {Heart, MessageCircle} from "lucide-react"
 import React, {useState} from "react"
-import {IPost, IPostComment, IPostLike} from "@/types/post"
+import {IPost, IPostComment} from "@/types/post"
 import {usePostModal} from "@/hooks/usePostModal"
-import {TId} from "@/types/globals";
 
 const ProfilePost = (
-  { post, user }: IPostCardProps) => {
+  {post, user}: IPostCardProps) => {
   const [commentCount, setCommentCount] = useState<number>(post.commentsCount ?? 0)
   const [updatedPost, setUpdatedPost] = useState<IPost>(post)
 
@@ -20,15 +19,11 @@ const ProfilePost = (
     }))
   }
 
-  const handleLikeAdded = (like: IPostLike | TId, liked: boolean) => {
-    console.log(like, liked)
-  }
-
-  const { openViewPostModal, PostModalComponent } = usePostModal({
+  const {openViewPostModal, PostModalComponent} = usePostModal({
     post: updatedPost,
     user,
     onCommentAdded: handleCommentAdded,
-    onLikedAdded: handleLikeAdded,
+    onLikedAdded: () => {},
   })
 
   return (

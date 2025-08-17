@@ -67,7 +67,6 @@ const PostCard = ({ post }: IPostCardProps) => {
 
     try {
       if (isLiked) {
-        // Unlike operation
         const res = await postService.unlike({ post_id: post._id })
         if (res.data.success) {
           const removedLikeId = res.data.data.id || res.data.data._id
@@ -81,10 +80,9 @@ const PostCard = ({ post }: IPostCardProps) => {
           }))
         }
       } else {
-        // Like operation
         const res = await postService.like({ post_id: post._id })
         if (res.data.success) {
-          const newLike = res.data.data as IPostLike // Type assertion
+          const newLike = res.data.data as IPostLike
           setLikesCount(prev => prev + 1)
           setUpdatedPost(prev => ({
             ...prev,
@@ -116,7 +114,6 @@ const PostCard = ({ post }: IPostCardProps) => {
 
   const handleLikedAdded = (likeData: IPostLike | TId, wasUnliked: boolean) => {
     if (wasUnliked) {
-      // Unlike operation - likeData is TId
       const removedLikeId = (likeData as TId).id || (likeData as any)._id
       setLikesCount(prev => prev - 1)
       setUpdatedPost(prev => ({
@@ -127,7 +124,6 @@ const PostCard = ({ post }: IPostCardProps) => {
         liked: false
       }))
     } else {
-      // Like operation - likeData is IPostLike
       const newLike = likeData as IPostLike
       setLikesCount(prev => prev + 1)
       setUpdatedPost(prev => ({

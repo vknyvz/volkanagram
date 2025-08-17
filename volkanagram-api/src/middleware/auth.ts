@@ -19,3 +19,21 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
     return ApiResponse.error(res, getErrorMessage(error))
   }
 }
+
+export function optionalAuth(req: Request, res: Response, next: NextFunction) {
+  const token = req.cookies[AUTH_CONFIG.JWT_COOKIE_TOKEN_NAME];
+
+  if (!token) {
+    req.user = undefined;
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string)
+    req.user = decoded as IJwtPayload;
+    next()
+  } catch (error) {
+    req.user = undefined;
+    next()
+  }
+}

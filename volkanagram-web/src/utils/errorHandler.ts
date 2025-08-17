@@ -1,4 +1,9 @@
 export const handleApiError = (error: unknown): void => {
+  const redX = '❌' // ❌ ⛔ 🔴 ✖
+
+  let errorMessage = `${redX} API Error: `
+  const errorDetails: any[] = []
+
   if (error && typeof error === 'object') {
     if ('response' in error && 'message' in error) {
       const axiosLikeError = error as {
@@ -9,18 +14,31 @@ export const handleApiError = (error: unknown): void => {
         }
       }
 
-      console.error(`API Error: ${axiosLikeError.message}`)
+      errorMessage += axiosLikeError.message
 
       if (axiosLikeError.response) {
-        console.error(`Status: ${axiosLikeError.response.status}`)
-        console.error(`Data:`, axiosLikeError.response.data)
+        errorMessage += ` | Status: ${axiosLikeError.response.status}`
+        if (axiosLikeError.response.data) {
+          errorDetails.push('\nResponse Data:', axiosLikeError.response.data)
+        }
       }
     } else if (error instanceof Error) {
-      console.error(`Error: ${error.message}`)
+      errorMessage += error.message
+      if (error.stack) {
+        errorDetails.push('\nStack:', error.stack)
+      }
     } else {
-      console.error('Unknown object error:', error)
+      errorMessage += 'Unknown object error'
+      errorDetails.push('\nError Object:', error)
     }
   } else {
-    console.error('Unexpected error:', error)
+    errorMessage += 'Unexpected error'
+    errorDetails.push('\nError Value:', error)
+  }
+
+  if (errorDetails.length > 0) {
+    console.error(errorMessage, ...errorDetails)
+  } else {
+    console.error(errorMessage)
   }
 }

@@ -1,4 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react'
+import Link from "next/link"
 import {Heart, MapPin, X} from 'lucide-react'
 import {getPostImageUrl, getUserImageUrl} from "@/utils/imageHelpers"
 import Image from "next/image"
@@ -85,7 +86,6 @@ const PostViewModal = (
 
     try {
       if (isLiked) {
-        // Unlike operation
         const res = await postService.unlike({ post_id: postData._id })
         if (res.data.success) {
           const removedLikeId = res.data.data.id || res.data.data._id
@@ -94,18 +94,17 @@ const PostViewModal = (
           ))
 
           if (onLikedAdded) {
-            onLikedAdded(res.data.data, true) // true indicates unlike
+            onLikedAdded(res.data.data, true)
           }
         }
       } else {
-        // Like operation
         const res = await postService.like({ post_id: postData._id })
         if (res.data.success) {
-          const newLike = res.data.data as IPostLike // Type assertion
+          const newLike = res.data.data as IPostLike
           setLikes(prev => [...prev, newLike])
 
           if (onLikedAdded) {
-            onLikedAdded(newLike, false) // false indicates like
+            onLikedAdded(newLike, false)
           }
         }
       }
@@ -251,9 +250,7 @@ const PostViewModal = (
                 className={`cursor-pointer ${postData.liked ? 'fill-red-500 text-red-500' : 'text-black hover:text-gray-500'}`}/>
             </div>
 
-            {/* Liked By Section */}
             <div className="flex items-center text-sm text-gray-800 mb-1">
-              {/* Avatars */}
               <div className="flex -space-x-2 mr-2">
                 {likes.slice(0, 3).map((likeUser: any, idx: number) => (
                   <div
@@ -280,10 +277,14 @@ const PostViewModal = (
                 ))}
               </div>
 
-              {/* Text */}
               {likes.length > 0 && (
                 <span>
-                  Liked by <span className="font-semibold">{likes[0].user.username}</span>
+                  Liked by <span className="font-semibold">
+                  <Link
+                    href={`/${likes[0].user.username}`}>
+                    {likes[0].user.username}
+                  </Link>
+                </span>
                   {likes.length > 1 && (
                     <>
                       {" "}and{" "}
@@ -296,7 +297,6 @@ const PostViewModal = (
               )}
             </div>
 
-            {/* Date */}
             <div className="text-xs text-gray-500 uppercase">
               {new Date(postData.createdAt).toLocaleDateString(undefined, {
                 month: "short",
