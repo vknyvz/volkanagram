@@ -1,3 +1,5 @@
+"use client"
+
 import React from 'react'
 import {Home, PlusSquare, User2} from 'lucide-react'
 import Link from 'next/link'
