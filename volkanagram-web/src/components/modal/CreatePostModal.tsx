@@ -1,3 +1,5 @@
+"use client"
+
 import React, {useState, useRef, useEffect} from 'react'
 import {ImagePlus, MapPin, ArrowLeft, X} from 'lucide-react'
 import {useUser} from "@/hooks/useUser"
@@ -19,7 +21,7 @@ const CreatePostModal = ({ onClose }: { onClose: () => void }) => {
   const [sharingState, setSharingState] = useState<string>('idle')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const modalContentRef = useRef<HTMLDivElement>(null)
-  const user = useUser()
+  const {authenticated} = useUser()
   const [form, setForm] = useState(DefaultPostForm)
   const router = useRouter()
   const [showValidation, setShowValidation] = useState<boolean>(false)
@@ -38,7 +40,9 @@ const CreatePostModal = ({ onClose }: { onClose: () => void }) => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (window.innerWidth >= 768 && modalContentRef.current && !modalContentRef.current.contains(event.target as Node)) {
+      if (window.innerWidth >= 768 &&
+        modalContentRef.current &&
+        !modalContentRef.current.contains(event.target as Node)) {
         onClose()
       }
     }
@@ -264,19 +268,19 @@ const CreatePostModal = ({ onClose }: { onClose: () => void }) => {
           <div className="flex-1 md:w-2/5 p-3 flex flex-col bg-white text-sm overflow-y-auto">
             <div className="flex items-center space-x-3 mb-3">
               <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden flex-shrink-0 flex items-center justify-center">
-                {user.profilePicture ? (
+                {authenticated().profilePicture ? (
                   <Image
-                    src={getUserImageUrl(user.profilePicture)}
+                    src={getUserImageUrl(authenticated().profilePicture)}
                     width={40}
                     height={40}
-                    alt={user.username}
+                    alt={authenticated().username}
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <Avatar string={user.fullName} />
+                  <Avatar string={authenticated().fullName} />
                 )}
               </div>
-              <span className="font-semibold text-gray-800">{user.username}</span>
+              <span className="font-semibold text-gray-800">{authenticated().username}</span>
             </div>
 
             <textarea

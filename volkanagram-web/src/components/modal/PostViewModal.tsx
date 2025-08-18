@@ -9,6 +9,7 @@ import {handleApiError} from "@/utils/errorHandler"
 import {IPostComment, IPostLike} from "@/types/post"
 import {postService} from "@/services/postService"
 import {IPostModalProps} from "@/types/props"
+import {useUser} from "@/hooks/useUser";
 
 const PostViewModal = (
   {
@@ -25,6 +26,7 @@ const PostViewModal = (
   const [newCommentText, setNewCommentText] = useState<string>('')
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const modalContentRef = useRef<HTMLDivElement>(null)
+  const {user, withAuth} = useUser()
 
   useEffect(() => {
     setComments(postData.comments || [])
@@ -81,7 +83,7 @@ const PostViewModal = (
     }
   }
 
-  const handleLiked = async () => {
+  const handleLiked = withAuth(async () => {
     const isLiked = postData.liked
 
     try {
@@ -111,7 +113,7 @@ const PostViewModal = (
     } catch (e: unknown) {
       handleApiError(e)
     }
-  }
+  })
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -247,7 +249,10 @@ const PostViewModal = (
               <Heart
                 onClick={handleLiked}
                 size={24}
-                className={`cursor-pointer ${postData.liked ? 'fill-red-500 text-red-500' : 'text-black hover:text-gray-500'}`}/>
+                className={`
+                  ${!user ? 'cursor-not-allowed' : 'cursor-pointer' } 
+                  ${postData.liked ? 'fill-red-500 text-red-500' : 'text-black hover:text-gray-500'}`
+                }/>
             </div>
 
             <div className="flex items-center text-sm text-gray-800 mb-1">
@@ -268,7 +273,7 @@ const PostViewModal = (
                       ) : (
                       <div
                         className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                        <div className="text-gray-400 text-lg font-light text-xs">
+                        <div className="text-gray-400 font-light text-xs">
                           {likeUser.user.fullName?.split(' ').map((name: string) => name[0]).join('') || '?'}
                         </div>
                       </div>
@@ -307,13 +312,16 @@ const PostViewModal = (
 
           <div className="p-4 border-t border-gray-200 flex items-center flex-shrink-0 text-xs bg-white">
             <textarea
-              className="flex-grow p-2 text-gray-700 border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all duration-200 mr-3 max-h-24 overflow-y-auto"
+              className={`
+                flex-grow p-2 border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all duration-200 mr-3 max-h-24 overflow-y-auto 
+                ${!user ? 'cursor-not-allowed text-gray-700 opacity-[0.8]' : 'text-black'}`
+              }
               placeholder="Add a comment..."
               value={newCommentText}
               onChange={(e) => setNewCommentText(e.target.value)}
               onKeyDown={handleKeyDown}
               rows={1}
-              disabled={isSubmitting}
+              disabled={isSubmitting || !user}
             />
             <button
               onClick={handlePostComment}

@@ -1,5 +1,5 @@
 import {IPost, IPostComment, IPostLike} from "@/types/post"
-import React from "react"
+import React, {ReactNode} from "react"
 import {IUserProfile} from "@/types/user"
 import {TId} from "@/types/globals"
 
@@ -56,4 +56,16 @@ export interface IUsePostModalReturn {
   openViewPostModal: () => void
   closeViewPostModal: () => void
   PostModalComponent: () => React.ReactElement | null
+}
+
+export interface NoPostsProps {
+  className?: string
+  message: string
+}
+
+export interface ModalRendererProps {
+}
+
+export interface ModalProviderProps {
+  children: ReactNode
 }

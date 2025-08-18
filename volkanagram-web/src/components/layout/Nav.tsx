@@ -2,7 +2,7 @@ import React from 'react'
 import Image from "next/image"
 import {Home, Instagram, PlusSquare, User2} from 'lucide-react'
 import Link from "next/link"
-import CreatePostModal from "@/components/modal/CreatePost"
+import CreatePostModal from "@/components/modal/CreatePostModal"
 import {useCreatePostModal} from "@/hooks/useCreatePostModal"
 
 const Nav = () => {
@@ -42,7 +42,7 @@ const Nav = () => {
         </Link>
 
         <Link
-          href={user._id ? '#' : '/login'}
+          href={user ? '#' : '/login'}
           onClick={handleCreateClick}
           className="flex items-center justify-center lg:justify-start w-13 h-13 lg:w-full px-3 py-2 rounded-xl hover:bg-gray-100 group"
         >
@@ -53,7 +53,7 @@ const Nav = () => {
         {isModalOpen && <CreatePostModal onClose={handleCloseModal} />}
 
         <Link
-          href={user._id ? '/' + user.username : '/login'}
+          href={user ? '/' + user.username : '/login'}
           className="flex items-center justify-center lg:justify-start w-13 h-13 lg:w-full px-3 py-2 rounded-xl hover:bg-gray-100 group"
         >
           <User2 className="w-8 h-8 lg:w-6 lg:h-6 lg:mr-3" />

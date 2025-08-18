@@ -13,6 +13,7 @@ import {handleApiError} from "@/utils/errorHandler"
 import {postService} from "@/services/postService"
 import {usePostModal} from "@/hooks/usePostModal"
 import {TId} from "@/types/globals"
+import {useUser} from "@/hooks/useUser";
 
 const PostCard = ({ post }: IPostCardProps) => {
   const captionRef = useRef<HTMLDivElement>(null)
@@ -22,6 +23,7 @@ const PostCard = ({ post }: IPostCardProps) => {
   const [commentCount, setCommentCount] = useState<number>(post.commentsCount ?? 0)
   const [likesCount, setLikesCount] = useState<number>(post.likesCount ?? 0)
   const [updatedPost, setUpdatedPost] = useState<IPost>(post)
+  const {user, withAuth} = useUser()
 
   useEffect(() => {
     const el = captionRef.current
@@ -62,7 +64,7 @@ const PostCard = ({ post }: IPostCardProps) => {
     }
   }
 
-  const handleLiked = async () => {
+  const handleLiked = withAuth(async () => {
     const isLiked = updatedPost.liked
 
     try {
@@ -94,7 +96,7 @@ const PostCard = ({ post }: IPostCardProps) => {
     } catch (e: unknown) {
       handleApiError(e)
     }
-  }
+  })
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -177,7 +179,7 @@ const PostCard = ({ post }: IPostCardProps) => {
           </div>
         </div>
 
-        <MoreHorizontal size={20} className="text-black hover:text-gray-500 cursor-pointer" />
+        <MoreHorizontal size={20} className="text-black hover:text-gray-500 cursor-not-allowed" />
       </div>
 
       <div className="w-full sm:mx-0">
@@ -199,14 +201,17 @@ const PostCard = ({ post }: IPostCardProps) => {
             <Heart
               onClick={handleLiked}
               size={24}
-              className={`cursor-pointer ${updatedPost.liked ? 'fill-red-500 text-red-500' : 'text-black hover:text-gray-500'}`}
+              className={`
+                ${!user ? 'cursor-not-allowed' : 'cursor-pointer' } 
+                ${updatedPost.liked ? 'fill-red-500 text-red-500' : 'text-black hover:text-gray-500'}`
+              }
             />
             <MessageCircle
               onClick={openViewPostModal}
               size={24}
               className="text-black hover:text-gray-500 cursor-pointer"
             />
-            {/*<Share size={24} className="text-black hover:text-gray-500 cursor-pointer" />*/}
+            <Share size={24} className="text-black hover:text-gray-500 cursor-not-allowed" />
           </div>
         </div>
 
@@ -250,11 +255,15 @@ const PostCard = ({ post }: IPostCardProps) => {
         <div className="pt-3">
           <input
             type="text"
+            disabled={!user}
             value={newCommentText}
             onChange={(e) => setNewCommentText(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Add a comment..."
-            className="w-full text-sm outline-none text-black bg-white placeholder-gray-500"
+            className={`
+              w-full text-sm outline-none bg-white placeholder-gray-500 
+              ${!user ? 'cursor-not-allowed text-gray-200 opacity-[0.4]' : 'text-black'}`
+            }
           />
         </div>
       </div>

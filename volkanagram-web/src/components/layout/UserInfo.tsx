@@ -7,7 +7,7 @@ import {getUserImageUrl} from "@/utils/imageHelpers"
 import Avatar from "@/components/ui/Avatar"
 
 const UserInfo = () => {
-  const user = useUser()
+  const {user} = useUser()
   const {logout} = useLogin()
 
   const doLogout = async (e: React.FormEvent) => {

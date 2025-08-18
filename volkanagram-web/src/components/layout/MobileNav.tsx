@@ -2,7 +2,7 @@ import React from 'react'
 import {Home, PlusSquare, User2} from 'lucide-react'
 import Link from 'next/link'
 import {useCreatePostModal} from "@/hooks/useCreatePostModal"
-import CreatePostModal from "@/components/modal/CreatePost"
+import CreatePostModal from "@/components/modal/CreatePostModal"
 
 const MobileNav = () => {
   const { isModalOpen, handleCreateClick, handleCloseModal, user } = useCreatePostModal()
@@ -14,7 +14,7 @@ const MobileNav = () => {
         <Home size={28} className="text-black" />
       </Link>
       <Link
-        href={user._id ? '#' : '/login'}
+        href={user ? '#' : '/login'}
         onClick={handleCreateClick}>
         <PlusSquare size={28} className="text-black" />
       </Link>
@@ -22,7 +22,7 @@ const MobileNav = () => {
       {isModalOpen && <CreatePostModal onClose={handleCloseModal} />}
 
       <Link
-        href={user ? '/' + user?.username : '/login'} className="p-2">
+        href={user ? '/' + user.username : '/login'} className="p-2">
         <User2 className="w-8 h-8 lg:w-6 lg:h-6 lg:mr-3" />
       </Link>
     </div>

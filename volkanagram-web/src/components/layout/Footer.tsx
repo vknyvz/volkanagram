@@ -1,13 +1,21 @@
-import React from "react"
+import Link from "next/link"
+import { useModal } from '@/contexts/ModalContext'
 
 export default function Footer({isMobile}: {isMobile: boolean}) {
+  const {openModal} = useModal()
+
   return (
-    <div className="text-xs text-gray-400 space-y-2">
+    <div className="text-sm  text-gray-300 font-semibold space-y-2 pt-4">
       <div className={`flex flex-wrap gap-2 ${isMobile ? 'justify-center' : ''} `}>
-        <span>About</span>
+        <Link
+          href="#"
+          className="cursor-pointer"
+          onClick={() => openModal('about')}>
+          <span>About</span>
+        </Link>
       </div>
       <div className={`mt-4 ${isMobile ? 'text-center' : ''}`}>
-        <span>© 2025 volkanagram</span>
+        <span>{new Date().getFullYear()} volkanagram</span>
       </div>
     </div>
   )

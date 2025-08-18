@@ -4,6 +4,8 @@ import "@/styles/globals.css"
 import StoreProvider from "@/providers/StoreProvider"
 import AuthProvider from "@/providers/AuthProvider"
 import ZoomPrevention from "@/components/ZoomPrevention"
+import {ModalProvider} from "@/providers/ModalProvider"
+import ModalRenderer from "@/components/modal/ModalRenderer"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,11 +42,15 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <StoreProvider>
-          <AuthProvider>
-            <ZoomPrevention />
+          <ModalProvider>
+            <AuthProvider>
+              <ZoomPrevention />
 
-            {children}
-          </AuthProvider>
+              {children}
+
+              <ModalRenderer />
+            </AuthProvider>
+          </ModalProvider>
         </StoreProvider>
       </body>
     </html>

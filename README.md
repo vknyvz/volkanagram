@@ -6,14 +6,14 @@ This is currently Work in Progress (WIP)
 
 ## 🏗️ Architecture
 
-### Frontend 
+### Frontend ([volkanagram-web](volkanagram-web))
 - **Next.js**: Next.js 15
 - **React**: React 19
 - **State Management** Redux
 - **TypeScript** 5.9
 - **Web Socket**: Socket.io
 
-### Backend
+### Backend ([volkanagram-api](volkanagram-api))
 - **Framework**: Express.js 5
 - **Database**: Mongo
 - **ODM**: Mongoose
@@ -29,8 +29,12 @@ docker compose up -d --build
 ```
 
 ### Access Services
+#### dev
 - **API**: http://localhost:5001
 - **WEB**: http://localhost:3000
+#### live
+- **API**: https://volkanagram.vknyvz.com
+- **WEB**: https://api-volkanagram.vknyvz.com
 
 ## 📡 API Endpoints
 

@@ -22,3 +22,14 @@ export type TId = {
   id: string
   _id?: string
 }
+
+export interface ModalContextType {
+  modals: ModalState
+  openModal: (modalId: string) => void
+  closeModal: (modalId: string) => void
+  isModalOpen: (modalId: string) => boolean
+}
+
+export interface ModalState {
+  [key: string]: boolean
+}

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import React from 'react'
-import PostViewModal from '@/components/modal/PostView'
+import PostViewModal from '@/components/modal/PostViewModal'
 import {IUsePostModalProps, IUsePostModalReturn} from "@/types/props"
 
 export const usePostModal = ({

@@ -19,9 +19,10 @@ import Loader from "@/components/ui/loader/Loader"
 import {useLoading} from "@/hooks/useLoading"
 import {profileService} from "@/services/profileService"
 import ProfilePost from "@/components/profile/ProfilePost"
+import NoPosts from "@/components/profile/NoPosts"
 
 export default function UserProfilePage({ params }: { params: Promise<{ username: string }> }) {
-  const user = useUser()
+  const {user, withAuth} = useUser()
   const dispatch = useDispatch()
   const {username} = use(params)
   const [userNotFound, setUserNotFound] = useState<boolean>(false)
@@ -31,7 +32,7 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
   const isLoading = useLoading()
 
   useEffect(() => {
-    if (!user?._id) {
+    if (!user) {
       return
     }
 
@@ -42,7 +43,7 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
       })
 
     return () => getSocketService().disconnect()
-  }, [dispatch, user?._id])
+  }, [dispatch, user])
 
   const postsCount = profile.postsCount || 0
 
@@ -97,7 +98,7 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
     return profile.username == user.username
   }
 
-  const doFollow = async (shouldFollow: boolean) => {
+  const doFollow = withAuth(async (shouldFollow: boolean) => {
     try {
       const res = shouldFollow
         ? await profileService.follow(profile.username)
@@ -112,7 +113,7 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
     } catch (e: unknown) {
       handleApiError(e)
     }
-  }
+  })
 
   return (
     <AppLayout showRightSide={false} profilePage>
@@ -144,7 +145,7 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
 
               {amIProfileOwner() ? (
                 <Link href={`/${profile.username}/settings`}>
-                  <button className="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-sm font-semibold cursor-pointer font-medium rounded-md transition-colors">
+                  <button className="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-sm font-semibold cursor-pointer rounded-md transition-colors">
                     Edit profile
                   </button>
                 </Link>
@@ -152,13 +153,13 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
                 profile.isFollowing ? (
                   <button
                     onClick={() => doFollow(false)}
-                    className="px-4 py-1.5 bg-gray-200 hover:bg-gray-300 text-sm font-semibold cursor-pointer font-medium rounded-md transition-colors">
+                    className="px-4 py-1.5 bg-gray-200 hover:bg-gray-300 text-sm font-semibold cursor-pointer rounded-md transition-colors">
                     Unfollow
                   </button>
                 ) : (
                   <button
                     onClick={() => doFollow(true)}
-                    className="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 text-sm text-white font-semibold cursor-pointer font-medium rounded-md transition-colors">
+                    className="px-4 py-1.5 bg-blue-500 hover:bg-blue-600 text-sm text-white font-semibold cursor-pointer rounded-md transition-colors">
                     Follow
                   </button>
                 ))}
@@ -200,12 +201,16 @@ export default function UserProfilePage({ params }: { params: Promise<{ username
               <Loader />
             </div>
             ) : (
-            <div className="grid grid-cols-3 gap-1">
-              {posts.map((post: IPost) => (
-                <ProfilePost key={post._id} post={post} user={profile} />
-              ))}
-            </div>
-          )}
+              !posts.length ? (
+                <NoPosts message="When user shares posts, they&#39;ll appear here."/>
+              ) : (
+                <div className="grid grid-cols-3 gap-1">
+                  {posts.map((post: IPost) => (
+                    <ProfilePost key={post._id} post={post} user={profile}/>
+                  ))}
+                </div>
+              )
+            )}
         </div>
       </div>
     </AppLayout>

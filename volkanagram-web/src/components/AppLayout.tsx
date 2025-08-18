@@ -1,5 +1,3 @@
-'use client'
-
 import React from "react"
 import StoryBar from "@/components/feed/StoryBar"
 import UserInfo from "@/components/layout/UserInfo"
