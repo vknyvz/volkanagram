@@ -63,9 +63,6 @@ export interface NoPostsProps {
   message: string
 }
 
-export interface ModalRendererProps {
-}
-
 export interface ModalProviderProps {
   children: ReactNode
 }

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react'
-import {X, Camera, InstagramIcon, Instagram} from 'lucide-react'
+import {X, Instagram} from 'lucide-react'
 
 interface AboutModalProps {
   onClose: () => void

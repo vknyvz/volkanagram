@@ -2,9 +2,8 @@
 
 import {useModal} from '@/contexts/ModalContext'
 import AboutModal from '@/components/modal/AboutModal'
-import {ModalRendererProps} from "@/types/props"
 
-const ModalRenderer = ({}: ModalRendererProps) => {
+const ModalRenderer = () => {
   const {isModalOpen, closeModal} = useModal()
 
   return (
