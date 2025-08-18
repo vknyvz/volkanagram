@@ -20,6 +20,16 @@ const nextConfig: NextConfig = {
         hostname: '192.168.4.124',
         port: '5001',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api-volkanagram.vknyvz.com',
+        pathname: '/api/u/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api-volkanagram.vknyvz.com',
+        pathname: '/api/p/**',
       }
     ],
   },
